@@ -1,0 +1,1161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daby Restaurant Journey</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Space+Grotesk:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===== BASIC THEME (simplified from your design) ===== */
+      :root {
+        --bg-main: #02030b;
+        --bg-gradient: radial-gradient(circle at top, #1c1f3b 0%, #050716 45%, #02030b 100%);
+        --card-bg: rgba(15, 18, 40, 0.92);
+        --card-soft-bg: rgba(18, 21, 50, 0.88);
+        --accent-cyan: #4ef2ff;
+        --accent-purple: #aa5dff;
+        --accent-green: #4dff9b;
+        --muted: rgba(255, 255, 255, 0.65);
+        --border-glow: rgba(120, 120, 255, 0.45);
+        --shadow-soft: 0 0 20px rgba(0, 0, 0, 0.65);
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --radius-sm: 10px;
+        --transition-fast: 0.18s ease-out;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Montserrat", sans-serif;
+        color: #fff;
+        background: var(--bg-main);
+        background-image: var(--bg-gradient);
+        background-attachment: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .emoji {
+        font-size: 1.4em;
+        vertical-align: middle;
+      }
+
+      .btn {
+        padding: 0.7em 1.4em;
+        border-radius: var(--radius-md);
+        border: none;
+        font-family: "Space Grotesk", sans-serif;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+          background var(--transition-fast);
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #ff2f92, #f89b29, #4ef2ff);
+        color: #050618;
+        box-shadow: 0 0 12px rgba(255, 47, 146, 0.6);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #191d3b, #13162b);
+        color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      /* ===== LAYOUT ===== */
+      #app {
+        width: 100%;
+        max-width: 1100px;
+        height: 95vh;
+        padding: 16px;
+      }
+
+      .lesson-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .top-bar {
+        background: linear-gradient(90deg, #00f5ff, #ff2f92, #ffe25f, #4dff9b);
+        border-radius: var(--radius-md);
+        padding: 10px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-soft);
+        margin-bottom: 14px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-orb {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 20%, #fff, transparent 60%),
+          radial-gradient(circle at 70% 80%, #00fff0, transparent 55%),
+          radial-gradient(circle at 50% 50%, #ff2f92, transparent 65%);
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.7), 0 0 18px rgba(255, 0, 160, 0.6);
+      }
+
+      .brand-title {
+        font-family: "Space Grotesk", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 1.1em;
+      }
+
+      .brand-subtitle {
+        font-size: 0.75em;
+        opacity: 0.9;
+      }
+
+      .lesson-pill {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.8em;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(142, 255, 255, 0.5);
+        background: linear-gradient(90deg, rgba(8, 235, 255, 0.25), rgba(255, 0, 168, 0.25));
+      }
+
+      .panel {
+        flex: 1;
+        background: linear-gradient(135deg, rgba(13, 16, 40, 0.98), rgba(6, 8, 26, 0.98));
+        border-radius: var(--radius-lg);
+        padding: 18px;
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .panel-header {
+        text-align: center;
+        margin-bottom: 12px;
+      }
+
+      .panel-title {
+        font-family: "Space Grotesk", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 1.5em;
+        margin-bottom: 4px;
+        color: #4ef2ff;
+      }
+
+      .panel-subtitle {
+        font-size: 0.9em;
+        color: var(--muted);
+      }
+
+      .mode-toggle {
+        margin-top: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8em;
+        color: var(--muted);
+      }
+
+      .mode-toggle span.active {
+        color: var(--accent-cyan);
+        font-weight: 700;
+      }
+
+      .mode-btn {
+        padding: 4px 10px;
+        font-size: 0.75em;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .mode-btn.active {
+        border-color: var(--accent-cyan);
+        background: rgba(78, 242, 255, 0.15);
+      }
+
+      /* tabs */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        margin: 10px 0 14px;
+        background: var(--card-soft-bg);
+        padding: 6px;
+        border-radius: var(--radius-md);
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 8px 4px;
+        font-size: 0.75em;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        cursor: pointer;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .tab:hover {
+        border-color: rgba(120, 120, 255, 0.6);
+        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.09), rgba(7, 10, 28, 0.96));
+      }
+
+      .tab.active {
+        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.15), rgba(21, 13, 51, 0.98));
+        border-color: rgba(103, 255, 196, 0.9);
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .tab .check {
+        font-size: 0.9em;
+        color: var(--accent-green);
+      }
+
+      .tab-content {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 6px;
+        margin-right: -6px;
+      }
+
+      /* Tab 1: scenario cards */
+      .scenario-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 12px;
+      }
+
+      .scenario-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-glow);
+        padding: 12px;
+      }
+
+      .scenario-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
+      .scenario-header h3 {
+        font-size: 0.9em;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent-purple);
+      }
+
+      .en-sentence {
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .pt-sentence {
+        font-size: 0.9em;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+
+      .explanation {
+        font-size: 0.8em;
+        color: rgba(255, 255, 255, 0.6);
+        border-left: 3px solid var(--accent-cyan);
+        padding-left: 6px;
+        font-style: italic;
+      }
+
+      /* Tab 2: key expressions */
+      .expression-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-glow);
+        padding: 14px;
+        margin-bottom: 10px;
+      }
+
+      .expression-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.1em;
+        margin-bottom: 4px;
+        color: var(--accent-cyan);
+      }
+
+      .pt-intro {
+        font-size: 0.9em;
+        color: var(--muted);
+        font-style: italic;
+        margin-bottom: 6px;
+      }
+
+      .micro {
+        font-size: 0.82em;
+        background: rgba(18, 21, 50, 0.7);
+        border-radius: var(--radius-sm);
+        padding: 8px;
+        margin-top: 6px;
+      }
+
+      .micro strong {
+        color: #fff;
+      }
+
+      .teacher-note {
+        margin-top: 6px;
+        font-size: 0.82em;
+        color: rgba(255, 255, 255, 0.75);
+        border-left: 3px solid var(--accent-purple);
+        padding-left: 6px;
+      }
+
+      .pronunciation {
+        margin-top: 6px;
+        font-size: 0.9em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Tab 3: situations quiz */
+      .quiz-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-glow);
+        padding: 14px;
+        max-width: 600px;
+      }
+
+      .quiz-question {
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .quiz-btn {
+        text-align: left;
+        width: 100%;
+      }
+
+      .quiz-btn.correct {
+        background: linear-gradient(135deg, #4dff9b, #13c063);
+        color: #050618;
+      }
+
+      .quiz-btn.wrong {
+        background: linear-gradient(135deg, #c62828, #ff5252);
+      }
+
+      .quiz-feedback {
+        margin-top: 8px;
+        font-size: 0.9em;
+      }
+
+      /* Tab 4: writing */
+      .writing-panel {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-glow);
+        padding: 14px;
+        max-width: 700px;
+      }
+
+      .writing-panel textarea {
+        width: 100%;
+        min-height: 150px;
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(178, 75, 243, 0.6);
+        padding: 8px;
+        background: rgba(2, 6, 32, 0.95);
+        color: #fff;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 0.9em;
+      }
+
+      .writing-panel textarea:focus {
+        outline: none;
+        box-shadow: 0 0 8px rgba(178, 75, 243, 0.9);
+      }
+
+      .char-count {
+        text-align: right;
+        font-size: 0.8em;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* Tab 5: very simple speaking prompt */
+      .speaking-panel {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-glow);
+        padding: 14px;
+        max-width: 700px;
+      }
+
+      .panel-footer {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      @media (max-width: 768px) {
+        #app {
+          height: 100vh;
+          padding: 8px;
+        }
+
+        .panel {
+          padding: 12px;
+        }
+
+        .tabs {
+          flex-wrap: wrap;
+        }
+
+        .tab {
+          flex-basis: 48%;
+          font-size: 0.7em;
+        }
+
+        .panel-footer {
+          flex-direction: column;
+        }
+
+        .panel-footer .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <!-- Vue via CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+    <script>
+      const { createApp, ref, computed } = Vue;
+
+      // ===== LESSON DATA (simplified, but real) =====
+      const lesson = {
+        title: "Arriving at the Restaurant",
+        description:
+          "Learn how to arrive, wait, be seated, and start ordering at a restaurant – with Portuguese and English support.",
+        scenario: [
+          {
+            id: "s1",
+            emoji: "🚗",
+            english: "So, I arrived at the restaurant along with my husband.",
+            portuguese: "Então, eu cheguei ao restaurante junto com meu marido.",
+            explanation:
+              "You are narrating how you arrived at the restaurant with your partner. 'Along with' is slightly more formal than 'with'.",
+          },
+          {
+            id: "s2",
+            emoji: "🚪",
+            english: "The waiter greeted us warmly.",
+            portuguese: "O garçom nos cumprimentou calorosamente.",
+            explanation:
+              "The restaurant staff welcomes you. 'Greeted' is the past tense of 'greet'.",
+          },
+          {
+            id: "s3",
+            emoji: "⏳",
+            english: "The waitress asked us to wait for 20 minutes.",
+            portuguese: "A garçonete pediu para aguardarmos 20 minutos.",
+            explanation:
+              "It's common to have to wait for a table. 'Asked us to wait' is the polite way to ask.",
+          },
+          {
+            id: "s4",
+            emoji: "👨‍👩‍👧‍👦",
+            english: "There was a couple ahead of us.",
+            portuguese: "Tinha um casal na nossa frente.",
+            explanation: "'Ahead of us' is more natural than 'before us' for a queue or order.",
+          },
+          {
+            id: "s5",
+            emoji: "🪑",
+            english: "We sat by the window on the patio.",
+            portuguese: "Sentamos perto da janela no pátio.",
+            explanation: "'By the window' = near the window. 'On the patio' indicates the specific location.",
+          },
+          {
+            id: "s6",
+            emoji: "🍟",
+            english:
+              "The owner came over and gave us some fries with sweet paprika while we were waiting.",
+            portuguese:
+              "O dono veio até nós e nos ofereceu batatas fritas com páprica doce enquanto esperávamos.",
+            explanation:
+              "'Came over' is more natural than 'came to us'. 'While we were waiting' indicates a continuous action in the past.",
+          },
+          {
+            id: "s7",
+            emoji: "✨",
+            english: "The waiter showed us our table. It was sparkling clean and the chairs were comfy.",
+            portuguese:
+              "O garçom nos mostrou nossa mesa. Ela estava brilhando de tão limpa e as cadeiras eram confortáveis.",
+            explanation:
+              "'Sparkling clean' = very clean. 'Comfy' is an informal way of saying 'comfortable'.",
+          },
+          {
+            id: "s8",
+            emoji: "👋",
+            english: "I waved at the waiter. He came over and asked if we had already decided.",
+            portuguese:
+              "Eu acenei para o garçom. Ele veio até nós e perguntou se já tínhamos decidido.",
+            explanation:
+              "'Waved at' = to signal with a hand. 'Came over' is more natural than 'came to us'.",
+          },
+          {
+            id: "s9",
+            emoji: "🍷",
+            english: "We chose a fish salad as a starter. My husband ordered two glasses of red wine.",
+            portuguese:
+              "Escolhemos uma salada de peixe como entrada. Meu marido pediu duas taças de vinho tinto.",
+            explanation:
+              "'Starter' (UK) / 'appetizer' (US) = first course. 'Ordered' is the past tense of 'order'.",
+          },
+          {
+            id: "s10",
+            emoji: "🚶‍♀️",
+            english: "As soon as we walked in, we noticed the pleasant atmosphere.",
+            portuguese: "Assim que entramos, notamos a atmosfera agradável.",
+            explanation:
+              "'As soon as we walked in' is a natural way to start the narration of an immediate event. 'Pleasant atmosphere' describes the restaurant's ambiance.",
+          },
+          {
+            id: "s11",
+            emoji: "⏱️",
+            english: "We had to wait because all the tables were taken.",
+            portuguese: "Tivemos que esperar porque todas as mesas estavam ocupadas.",
+            explanation:
+              "This explains the reason for waiting, a common scenario. 'All the tables were taken' is a key expression to indicate no tables are available.",
+          },
+          {
+            id: "s12",
+            emoji: "📖",
+            english: "The menu was already on our table when we sat down.",
+            portuguese: "O cardápio já estava na nossa mesa quando nos sentamos.",
+            explanation:
+              "A practical detail that avoids logical gaps in the narrative. 'On our table' specifies the menu's location.",
+          },
+          {
+            id: "s13",
+            emoji: "🧹",
+            english: "After we finished, the waiter quickly cleared our table.",
+            portuguese: "Depois que terminamos, o garçom rapidamente limpou nossa mesa.",
+            explanation:
+              "'Cleared our table' is an essential and common action in restaurants, indicating that the dishes were removed.",
+          },
+          {
+            id: "s14",
+            emoji: "🎶",
+            english: "The background music was soft and added to the relaxed mood.",
+            portuguese: "A música ambiente era suave e contribuía para o clima relaxado.",
+            explanation:
+              "Describing the atmosphere helps immersion and practice of descriptive vocabulary. 'Added to the relaxed mood' shows the effect of the music.",
+          },
+          {
+            id: "s15",
+            emoji: "🧾",
+            english: "Before paying, we carefully checked the bill.",
+            portuguese: "Antes de pagar, verificamos cuidadosamente a conta.",
+            explanation:
+              "A realistic final step in a restaurant experience. 'Checked the bill' is an important action for the customer.",
+          },
+          // New expressions for "THE STARTER ARRIVES"
+          {
+            id: "s16",
+            emoji: "🍽️",
+            english: "A few minutes later, the waiter came back with our starter.",
+            portuguese: "Alguns minutos depois, o garçom voltou com a nossa entrada.",
+            explanation: "Introduces the arrival of the starter. 'Came back with' is a common expression.",
+          },
+          {
+            id: "s17",
+            emoji: "✨",
+            english: "He placed the dishes on the table and wished us a pleasant meal.",
+            portuguese: "Ele colocou os pratos na mesa e nos desejou uma boa refeição.",
+            explanation:
+              "The waiter's action when serving. Common phrases: 'Enjoy your meal.' / 'Bon appétit.' (very common in Europe)",
+          },
+          {
+            id: "s18",
+            emoji: "🥗",
+            english: "The starter looked fresh and well presented.",
+            portuguese: "A entrada parecia fresca e bem apresentada.",
+            explanation: "Describes the appearance of the food, important for the experience.",
+          },
+          {
+            id: "s19",
+            emoji: "🍷",
+            english: "We started eating and the wine arrived shortly after.",
+            portuguese: "Começamos a comer e o vinho chegou logo em seguida.",
+            explanation: "'Shortly after' = soon after (very natural).",
+          },
+          {
+            id: "s20",
+            emoji: "🍇",
+            english: "The red wine was smooth and full-bodied.",
+            portuguese: "O vinho tinto era suave e encorpado.",
+            explanation: "Vocabulary to describe wine.",
+          },
+          // New expressions for "MAIN COURSE (THE MAIN DISH)"
+          {
+            id: "s21",
+            emoji: "🍽️",
+            english: "After we finished our starter, the waiter cleared the table.",
+            portuguese: "Depois que terminamos a entrada, o garçom limpou a mesa.",
+            explanation: "'Clear the table' = to remove dishes (fixed expression).",
+          },
+          {
+            id: "s22",
+            emoji: "❓",
+            english: "He asked if we were ready for the main course.",
+            portuguese: "Ele perguntou se estávamos prontos para o prato principal.",
+            explanation: "'Main course' (UK & US) / 'main dish' (more casual).",
+          },
+          {
+            id: "s23",
+            emoji: "🍲",
+            english: "Shortly after, our main dishes arrived.",
+            portuguese: "Logo depois, nossos pratos principais chegaram.",
+            explanation: "'Shortly after' = soon after (very natural).",
+          },
+          {
+            id: "s24",
+            emoji: "🐟",
+            english: "I ordered grilled fish with vegetables.",
+            portuguese: "Eu pedi peixe grelhado com legumes.",
+            explanation: "Example of a main course order.",
+          },
+          {
+            id: "s25",
+            emoji: "🥩",
+            english: "My husband ordered steak with fries.",
+            portuguese: "Meu marido pediu bife com batatas fritas.",
+            explanation: "Another example of an order. 'No surprise there' is a conversational aside.",
+          },
+          {
+            id: "s26",
+            emoji: "😋",
+            english: "The food was delicious and perfectly cooked.",
+            portuguese: "A comida estava deliciosa e no ponto certo.",
+            explanation: "Expressions to compliment the food.",
+          },
+          {
+            id: "s27",
+            emoji: "👍",
+            english: "We complimented the waiter on the food.",
+            portuguese: "Elogiamos a comida ao garçom.",
+            explanation:
+              "Common compliments: 'Everything is great.' / 'The food is excellent.' / 'Compliments to the chef.'",
+          },
+          // New expressions for "DURING THE MEAL"
+          {
+            id: "s28",
+            emoji: "🗣️",
+            english: "While eating, we chatted and enjoyed the atmosphere.",
+            portuguese: "Enquanto comíamos, conversávamos e aproveitávamos o ambiente.",
+            explanation: "Describes interaction during the meal.",
+          },
+          {
+            id: "s29",
+            emoji: "👂",
+            english: "The restaurant was lively but not too noisy.",
+            portuguese: "O restaurante estava animado, mas não muito barulhento.",
+            explanation: "Describes the noise level and ambiance.",
+          },
+          {
+            id: "s30",
+            emoji: "🎵",
+            english: "Soft music was playing in the background.",
+            portuguese: "Uma música suave tocava ao fundo.",
+            explanation: "Detail about the background music.",
+          },
+          // New expressions for "DESSERT & COFFEE"
+          {
+            id: "s31",
+            emoji: "🍰",
+            english: "After finishing our main course, the waiter asked if we would like dessert.",
+            portuguese: "Depois de terminarmos o prato principal, o garçom perguntou se gostaríamos de sobremesa.",
+            explanation: "Transition to dessert.",
+          },
+          {
+            id: "s32",
+            emoji: "🍫",
+            english: "We decided to share a chocolate cake.",
+            portuguese: "Decidimos dividir um bolo de chocolate.",
+            explanation: "'Share' = to divide (very common in restaurants).",
+          },
+          {
+            id: "s33",
+            emoji: "☕",
+            english: "We also ordered two coffees.",
+            portuguese: "Também pedimos dois cafés.",
+            explanation: "Ordering post-meal beverages.",
+          },
+          {
+            id: "s34",
+            emoji: "🍮",
+            english: "The dessert was rich and not too sweet.",
+            portuguese: "A sobremesa era intensa e não muito doce.",
+            explanation: "Describes the dessert.",
+          },
+          // New expressions for "ASKING FOR THE BILL"
+          {
+            id: "s35",
+            emoji: "🧾",
+            english: "Once we were done, I asked for the bill.",
+            portuguese: "Quando terminamos, pedi a conta.",
+            explanation:
+              "Common phrases: 'Could we have the bill, please?' (UK) / 'Can we get the check?' (US).",
+          },
+          {
+            id: "s36",
+            emoji: "💼",
+            english: "The waiter brought the bill in a small folder.",
+            portuguese: "O garçom trouxe a conta em uma pastinha.",
+            explanation: "Detail about how the bill is presented.",
+          },
+          {
+            id: "s37",
+            emoji: "✅",
+            english: "We checked the bill and everything was correct.",
+            portuguese: "Conferimos a conta e estava tudo certo.",
+            explanation: "Action of checking the bill.",
+          },
+          {
+            id: "s38",
+            emoji: "💳",
+            english: "My husband paid by card.",
+            portuguese: "Meu marido pagou com cartão.",
+            explanation: "Method of payment.",
+          },
+          // New expressions for "LEAVING THE RESTAURANT"
+          {
+            id: "s39",
+            emoji: "🧥",
+            english: "We put our coats back on and got ready to leave.",
+            portuguese: "Colocamos nossos casacos e nos preparamos para sair.",
+            explanation: "Actions when preparing to leave.",
+          },
+          {
+            id: "s40",
+            emoji: "👋",
+            english: "We thanked the staff and said goodbye.",
+            portuguese: "Agradecemos à equipe e nos despedimos.",
+            explanation: "Farewell and thanking the staff.",
+          },
+        ],
+        expressions: [
+          {
+            id: "exp1",
+            expression: "We'd like a table for two, please.",
+            ptIntro:
+              "Situation: You've arrived at the restaurant and need to ask for a table for two people.",
+            microBreakdown: [
+              {
+                term: "We'd like",
+                meaning: "We would like (polite form, contraction of 'We would like').",
+              },
+              {
+                term: "a table for two",
+                meaning: "a table for two people.",
+              },
+              {
+                term: "please",
+                meaning: "please – always add to sound polite.",
+              },
+            ],
+            teacherNote:
+              "Avoid 'We want a table for two'. 'We'd like' sounds much more polite in restaurants.",
+            pronunciation: "/wid laɪk ə ˈteɪbəl fər tuː, pliːz/",
+          },
+          {
+            id: "exp2",
+            expression: "All the tables are taken.",
+            ptIntro:
+              "Situation: You look around and realize there are no free tables in the restaurant.",
+            microBreakdown: [
+              { term: "All the tables", meaning: "All the tables" },
+              { term: "are taken", meaning: "are occupied" },
+            ],
+            teacherNote:
+              "Don't say 'All the tables are full' for unavailable tables. The natural way is 'taken'.",
+            pronunciation: "/ɔːl ðə ˈteɪbəlz ɑːr ˈteɪkən/",
+          },
+          {
+            id: "exp3",
+            expression: "We chose a fish salad as a starter.",
+            ptIntro:
+              "Situation: You are explaining what you ordered as a starter at the restaurant.",
+            microBreakdown: [
+              { term: "We chose", meaning: "We selected (past tense of choose)" },
+              { term: "fish salad", meaning: "fish salad" },
+              { term: "as a starter", meaning: "as an appetizer" },
+            ],
+            teacherNote:
+              "'Starter' (UK) / 'appetizer' (US). In the US, 'entrée' is the main course, be careful!",
+            pronunciation: "/wi tʃoʊz ə fɪʃ ˈsæləd æz ə ˈstɑːrtər/",
+          },
+        ],
+        quiz: {
+          question: "What is the most polite way to ask for a table for three people?",
+          options: [
+            {
+              text: "We want a table for three.",
+              correct: false,
+              feedback: "Understandable, but sounds too direct.",
+            },
+            {
+              text: "We'd like a table for three, please.",
+              correct: true,
+              feedback: "Perfect! Polite and natural.",
+            },
+            {
+              text: "Give us a table for three.",
+              correct: false,
+              feedback: "Very rude. Avoid.",
+            },
+          ],
+        },
+        writingPrompt:
+          "Write 4–6 sentences about a time you went to a restaurant. Use at least 2 phrases: 'We'd like a table for two, please.' and 'All the tables are taken.'",
+      };
+
+      // ===== SIMPLE APP (no Pinia, just Vue state) =====
+      const app = createApp({
+        setup() {
+          const activeTab = ref(1); // 1..5
+          const mode = ref("pt-heavy"); // 'pt-heavy' or 'en-heavy'
+
+          const quizSelected = ref(null);
+          const quizFeedback = ref("");
+
+          const writingText = ref("");
+
+          const setMode = (newMode) => {
+            mode.value = newMode;
+            try {
+              localStorage.setItem("daby-mode", newMode);
+            } catch (e) {}
+          };
+
+          // init from localStorage
+          try {
+            const savedMode = localStorage.getItem("daby-mode");
+            if (savedMode === "en-heavy") mode.value = "en-heavy";
+            const savedText = localStorage.getItem("daby-writing");
+            if (savedText) writingText.value = savedText;
+          } catch (e) {}
+
+          const onQuizClick = (opt) => {
+            quizSelected.value = opt.text;
+            quizFeedback.value = opt.feedback;
+          };
+
+          const onWritingChange = () => {
+            try {
+              localStorage.setItem("daby-writing", writingText.value);
+            } catch (e) {}
+          };
+
+          const speak = (english) => {
+            if (!window.speechSynthesis) return;
+            const u = new SpeechSynthesisUtterance(english);
+            u.lang = "en-US";
+            u.rate = mode.value === "pt-heavy" ? 0.85 : 1;
+            speechSynthesis.speak(u);
+          };
+
+          return {
+            lesson,
+            activeTab,
+            mode,
+            quizSelected,
+            quizFeedback,
+            writingText,
+            setMode,
+            onQuizClick,
+            onWritingChange,
+            speak,
+          };
+        },
+        template: `
+          <div class="lesson-container">
+            <!-- TOP BAR -->
+            <header class="top-bar">
+              <div class="brand">
+                <div class="brand-orb"></div>
+                <div>
+                  <div class="brand-title">Daby Restaurant Journey</div>
+                  <div class="brand-subtitle">English for Real Restaurant Situations</div>
+                </div>
+              </div>
+              <div class="lesson-pill">
+                <span class="emoji">🍽️</span> {{ lesson.title }}
+              </div>
+            </header>
+
+            <!-- MAIN PANEL -->
+            <section class="panel">
+              <div class="panel-header">
+                <div class="panel-title">{{ lesson.title }}</div>
+                <div class="panel-subtitle">{{ lesson.description }}</div>
+
+                <div class="mode-toggle">
+                  <button
+                    class="mode-btn"
+                    :class="{ active: mode === 'pt-heavy' }"
+                    @click="setMode('pt-heavy')"
+                  >
+                    Basic Mode 🇧🇷
+                  </button>
+                  <button
+                    class="mode-btn"
+                    :class="{ active: mode === 'en-heavy' }"
+                    @click="setMode('en-heavy')"
+                  >
+                    Fluent Mode 🇬🇧
+                  </button>
+                </div>
+              </div>
+
+              <!-- TABS -->
+              <div class="tabs">
+                <div
+                  class="tab"
+                  :class="{ active: activeTab === 1 }"
+                  @click="activeTab = 1"
+                >
+                  <span class="emoji">🚶‍♀️</span> Scenario
+                </div>
+                <div
+                  class="tab"
+                  :class="{ active: activeTab === 2 }"
+                  @click="activeTab = 2"
+                >
+                  <span class="emoji">🗣️</span> Expressions
+                </div>
+                <div
+                  class="tab"
+                  :class="{ active: activeTab === 3 }"
+                  @click="activeTab = 3"
+                >
+                  <span class="emoji">🍽️</span> Situations
+                </div>
+                <div
+                  class="tab"
+                  :class="{ active: activeTab === 4 }"
+                  @click="activeTab = 4"
+                >
+                  <span class="emoji">✍️</span> Write
+                </div>
+                <div
+                  class="tab"
+                  :class="{ active: activeTab === 5 }"
+                  @click="activeTab = 5"
+                >
+                  <span class="emoji">🎙️</span> Speak
+                </div>
+              </div>
+
+              <!-- TAB CONTENT -->
+              <div class="tab-content">
+                <!-- TAB 1: CENÁRIO -->
+                <div v-if="activeTab === 1">
+                  <p style="margin-bottom:10px; font-size:0.9em; color:var(--muted); text-align:center;">
+                    Read the story in small blocks. Focus on the mental image and the feeling.
+                  </p>
+                  <div class="scenario-grid">
+                    <div v-for="step in lesson.scenario" :key="step.id" class="scenario-card">
+                      <div class="scenario-header">
+                        <span class="emoji">{{ step.emoji }}</span>
+                        <h3>Step</h3>
+                      </div>
+                      <div class="en-sentence">{{ step.english }}</div>
+                      <div v-if="mode === 'pt-heavy'" class="pt-sentence">{{ step.portuguese }}</div>
+                      <div v-if="mode === 'pt-heavy'" class="explanation">
+                        {{ step.explanation }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 2: EXPRESSÕES -->
+                <div v-else-if="activeTab === 2">
+                  <p style="margin-bottom:10px; font-size:0.9em; color:var(--muted); text-align:center;">
+                    Study each expression before using it in real life. Click on 🔊 to listen.
+                  </p>
+                  <div v-for="exp in lesson.expressions" :key="exp.id" class="expression-card">
+                    <div class="expression-title">
+                      <span class="emoji">💡</span> {{ exp.expression }}
+                    </div>
+                    <div v-if="mode === 'pt-heavy'" class="pt-intro">
+                      {{ exp.ptIntro }}
+                    </div>
+
+                    <div class="micro" v-if="mode === 'pt-heavy'">
+                      <div v-for="item in exp.microBreakdown" :key="item.term">
+                        <strong>{{ item.term }}</strong> = {{ item.meaning }}
+                      </div>
+                    </div>
+
+                    <div v-if="mode === 'pt-heavy'" class="teacher-note">
+                      🎯 Teacher note: {{ exp.teacherNote }}
+                    </div>
+
+                    <div class="pronunciation">
+                      <span class="emoji">🔊</span>
+                      <span>Pronunciation: {{ exp.pronunciation }}</span>
+                      <button class="btn btn-secondary" style="font-size:0.7em;" @click="speak(exp.expression)">
+                        Play
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 3: QUIZ -->
+                <div v-else-if="activeTab === 3">
+                  <div class="quiz-card">
+                    <div class="quiz-question">
+                      {{ lesson.quiz.question }}
+                    </div>
+                    <div class="quiz-options">
+                      <button
+                        v-for="opt in lesson.quiz.options"
+                        :key="opt.text"
+                        class="btn btn-secondary quiz-btn"
+                        :class="{
+                          correct: quizSelected === opt.text && opt.correct,
+                          wrong: quizSelected === opt.text && !opt.correct
+                        }"
+                        @click="onQuizClick(opt)"
+                      >
+                        {{ opt.text }}
+                      </button>
+                    </div>
+                    <div v-if="quizFeedback" class="quiz-feedback">
+                      {{ quizFeedback }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 4: WRITING -->
+                <div v-else-if="activeTab === 4">
+                  <div class="writing-panel">
+                    <p style="margin-bottom:6px; font-weight:700;">
+                      📝 Challenge: {{ lesson.writingPrompt }}
+                    </p>
+                    <textarea
+                      v-model="writingText"
+                      @input="onWritingChange"
+                      placeholder="Start writing here in English or mixing English + Portuguese..."
+                    ></textarea>
+                    <div class="char-count">
+                      {{ writingText.length }} characters
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 5: SPEAKING (simple prompt) -->
+                <div v-else-if="activeTab === 5">
+                  <div class="speaking-panel">
+                    <p style="margin-bottom:6px;">
+                      🎙️ Suggestion: choose one of the expressions and say it aloud in 3 different tones:
+                    </p>
+                    <ul style="font-size:0.9em; margin-left:18px; margin-bottom:8px;">
+                      <li>Normal tone (neutral)</li>
+                      <li>Super polite tone</li>
+                      <li>Excited / enthusiastic tone</li>
+                    </ul>
+                    <p style="font-size:0.9em; color:var(--muted);">
+                      For example: <strong>"We'd like a table for two, please."</strong>
+                    </p>
+                    <p style="font-size:0.85em; color:var(--muted); margin-top:4px;">
+                      If you want to use technology: open your phone's voice recorder and record yourself practicing.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FOOTER BUTTONS -->
+              <div class="panel-footer">
+                <button
+                  class="btn btn-secondary"
+                  @click="activeTab = Math.max(1, activeTab - 1)"
+                  :disabled="activeTab === 1"
+                >
+                  <span class="emoji">⬅️</span> Back
+                </button>
+                <button
+                  class="btn btn-primary"
+                  @click="activeTab = Math.min(5, activeTab + 1)"
+                  :disabled="activeTab === 5"
+                >
+                  Continue <span class="emoji">➡️</span>
+                </button>
+              </div>
+            </section>
+          </div>
+        `,
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>
